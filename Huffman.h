@@ -6,6 +6,8 @@
 #define HUFFMAN_COMPRASOR_HUFFMAN_H
 #include "Node.h"
 #include <string>
+#include <climits>
+#include <cmath>
 
 class fail_to_open : public std::exception{
 public:
@@ -13,11 +15,11 @@ public:
 };
 
 class Huffman {
-    static const int ASCII = 256;
-    unsigned int freq[ASCII]{};
+    static const int BYTES = std::pow(2,CHAR_BIT);
+    unsigned int freq[BYTES]{};
     Node* freq_tree{};
     std::string file_path;
-    std::string* dictionary[ASCII]{};
+    std::string* dictionary[BYTES]{};
 
     void fill_hist();
     void build_tree();

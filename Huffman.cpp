@@ -10,7 +10,7 @@
 #include <climits>
 
 Huffman::Huffman(std::string file_path, Mode mode) : file_path(std::move(file_path)){
-    for(int i=0; i<ASCII ; ++i){
+    for(int i=0; i<BYTES ; ++i){
         freq[i] = 0;
         dictionary[i] = nullptr;
     }
@@ -62,11 +62,11 @@ void Huffman::fill_hist() {
 }
 
 void Huffman::build_tree() {
-    Node* bytes_nodes_arr[ASCII];
+    Node* bytes_nodes_arr[BYTES];
     int count = 0;
 
     //creating leaf for every type of byte
-    for(int i=0 ; i<ASCII ; ++i){
+    for(int i=0 ; i<BYTES ; ++i){
         if(freq[i] == 0){
             bytes_nodes_arr[i] = nullptr;
             continue;
@@ -84,13 +84,13 @@ void Huffman::build_tree() {
     int min = 0, min_pos, second_min = 0, second_min_pos = 0;
 
     while(count > 1){
-        for(int i = 0; i<ASCII ; ++i){
+        for(int i = 0; i<BYTES ; ++i){
             if((bytes_nodes_arr[i] != nullptr) && (min == 0 || bytes_nodes_arr[i]->freq < min)){
                 min = bytes_nodes_arr[i]->freq;
                 min_pos = i;
             }
         }
-        for(int i = 0; i<ASCII ; ++i){
+        for(int i = 0; i<BYTES ; ++i){
             if((bytes_nodes_arr[i] != nullptr) && (i != min_pos) &&
                 (second_min == 0 || bytes_nodes_arr[i]->freq < second_min)){
                 second_min = bytes_nodes_arr[i]->freq;
@@ -155,7 +155,7 @@ void Huffman::compress() {
     unsigned int bits_in_out = 0;
 
     //save the hist for the decompression process
-    for(int i = 0; i<ASCII ; ++i){
+    for(int i = 0; i<BYTES ; ++i){
         compressed_file.write((char *)&freq[i], sizeof(unsigned int));
     }
 
@@ -208,8 +208,8 @@ void Huffman::decompress() {
     //not needed anymore
     delete str;
 
-    //the ASCII*(sizeof(unsigned int)) first bytes are the freq data
-    compressed_file.seekg(ASCII*(sizeof(unsigned int)));
+    //the BYTES*(sizeof(unsigned int)) first bytes are the freq data
+    compressed_file.seekg(BYTES*(sizeof(unsigned int)));
 
     unsigned char in;
     Node* node = freq_tree;
@@ -255,7 +255,7 @@ void Huffman::restore_hist() {
     }
 
     //reconstruct frequencies
-    for(int i = 0 ; i<ASCII ; ++i){
+    for(int i = 0 ; i<BYTES ; ++i){
         compressed_file.read((char *)&freq[i], sizeof(unsigned int));
     }
 }
