@@ -1,4 +1,4 @@
-#Huffman compression/decompression
+# Huffman compression/decompression
 
 To compile just run the make file.
 
